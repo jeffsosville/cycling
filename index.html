@@ -11,146 +11,131 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
   :root{
-    --paper:#E9EAE4;
-    --paper-2:#DFE1D9;
-    --ink:#17262B;
-    --ink-soft:#5A6B6E;
-    --rule:#C4CBC2;
-    --vt:#2F6D50;
-    --ny:#7A3B5E;
-    --co:#D64500;
+    --paper:#E9EAE4; --paper-2:#DFE1D9; --ink:#17262B; --ink-soft:#5A6B6E;
+    --rule:#C4CBC2; --vt:#2F6D50; --ny:#7A3B5E; --co:#D64500;
     --display:"Bricolage Grotesque",system-ui,sans-serif;
     --body:"Newsreader",Georgia,serif;
     --mono:"IBM Plex Mono",ui-monospace,monospace;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
-  body{
-    margin:0;background:var(--paper);color:var(--ink);
-    font-family:var(--body);font-size:17px;line-height:1.55;
-    font-optical-sizing:auto;
-  }
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--body);font-size:17px;line-height:1.55;font-optical-sizing:auto}
   .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
 
-  /* ---------- masthead ---------- */
   header{padding:56px 0 0}
-  .eyebrow{
-    font-family:var(--mono);font-size:12px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--ink-soft);margin:0 0 18px
-  }
-  h1{
-    font-family:var(--display);font-weight:800;
-    font-size:clamp(40px,8.5vw,86px);line-height:.94;letter-spacing:-.03em;
-    margin:0 0 18px;max-width:14ch;
-  }
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft);margin:0 0 18px}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(40px,8.5vw,86px);
+    line-height:.94;letter-spacing:-.03em;margin:0 0 18px;max-width:14ch}
   h1 em{font-style:normal;color:var(--co)}
-  .standfirst{
-    font-size:clamp(17px,2.1vw,21px);font-weight:300;color:var(--ink-soft);
-    max-width:56ch;margin:0 0 40px
-  }
+  .standfirst{font-size:clamp(17px,2.1vw,21px);font-weight:300;color:var(--ink-soft);
+    max-width:56ch;margin:0 0 40px}
 
-  /* ---------- ridgeline ---------- */
   .ridge{position:relative;margin:0 0 8px}
   .ridge svg{display:block;width:100%;height:auto;overflow:visible}
   .ridge .grid line{stroke:var(--rule);stroke-width:1;stroke-dasharray:2 5}
-  .ridge .grid text{
-    font-family:var(--mono);font-size:9px;fill:var(--ink-soft);
-    letter-spacing:.08em
-  }
+  .ridge .grid text{font-family:var(--mono);font-size:9px;fill:var(--ink-soft);letter-spacing:.08em}
   .ridge .base{stroke:var(--ink);stroke-width:1.25}
-  .hit{fill:transparent;cursor:crosshair}
+  .hit{fill:transparent;cursor:pointer}
   .hit:hover,.hit:focus{fill:rgba(23,38,43,.10);outline:none}
-  .tip{
-    position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-118%);
+  .pdot{fill:var(--paper);stroke:var(--ink);stroke-width:1.25;pointer-events:none}
+  .tip{position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-118%);
     background:var(--ink);color:var(--paper);padding:9px 12px;border-radius:3px;
     font-family:var(--mono);font-size:11.5px;line-height:1.5;white-space:nowrap;
-    transition:opacity .12s ease;z-index:5;
-  }
+    transition:opacity .12s ease;z-index:5}
   .tip b{font-weight:500;display:block;font-size:12px;margin-bottom:2px}
-  .ridge-key{
-    display:flex;flex-wrap:wrap;gap:22px;
-    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--ink-soft);
-    padding:14px 0 0;border-top:1px solid var(--rule)
-  }
+  .ridge-key{display:flex;flex-wrap:wrap;gap:22px;font-family:var(--mono);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);
+    padding:14px 0 0;border-top:1px solid var(--rule)}
   .ridge-key span{display:flex;align-items:center;gap:8px}
   .sw{width:16px;height:9px;display:inline-block}
-  .ridge-note{
-    font-family:var(--mono);font-size:11px;color:var(--ink-soft);
-    margin-left:auto;text-transform:none;letter-spacing:0
-  }
+  .ridge-note{font-family:var(--mono);font-size:11px;color:var(--ink-soft);
+    margin-left:auto;text-transform:none;letter-spacing:0}
 
-  /* ---------- totals ---------- */
-  .totals{
-    display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
-    background:var(--rule);border-top:1px solid var(--rule);
-    border-bottom:1px solid var(--rule);margin:56px 0 0
-  }
+  .totals{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--rule);
+    border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:56px 0 0}
   .totals div{background:var(--paper);padding:22px 18px 20px}
-  .totals dt{
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--ink-soft);margin:0 0 6px
-  }
-  .totals dd{
-    margin:0;font-family:var(--display);font-weight:600;
-    font-size:clamp(22px,3.4vw,34px);letter-spacing:-.02em;line-height:1
-  }
+  .totals dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft);margin:0 0 6px}
+  .totals dd{margin:0;font-family:var(--display);font-weight:600;
+    font-size:clamp(22px,3.4vw,34px);letter-spacing:-.02em;line-height:1}
 
-  /* ---------- sections ---------- */
   section{padding:64px 0 0}
-  h2{
-    font-family:var(--display);font-weight:600;font-size:13px;
-    letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);
-    margin:0 0 20px;padding-bottom:12px;border-bottom:1px solid var(--rule)
-  }
-  #map{
-    height:400px;border:1px solid var(--rule);background:var(--paper-2);
-    filter:saturate(.72)
-  }
+  h2{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-soft);margin:0 0 20px;
+    padding-bottom:12px;border-bottom:1px solid var(--rule)}
+  h2 span{float:right;letter-spacing:.06em;text-transform:none;font-family:var(--mono);font-size:11px}
+
+  /* gallery */
+  .gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:6px}
+  .gal figure{margin:0;position:relative;cursor:pointer;background:var(--paper-2);
+    aspect-ratio:4/3;overflow:hidden}
+  .gal img{width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+  .gal figure:hover img,.gal figure:focus-visible img{transform:scale(1.05)}
+  .gal figure:focus-visible{outline:2px solid var(--co);outline-offset:2px}
+  .gal figcaption{position:absolute;inset:auto 0 0 0;padding:26px 9px 8px;
+    font-family:var(--mono);font-size:10px;line-height:1.35;color:#fff;
+    background:linear-gradient(transparent,rgba(10,18,21,.86));
+    opacity:0;transition:opacity .2s}
+  .gal figure:hover figcaption,.gal figure:focus-visible figcaption{opacity:1}
+  .gal .flag{position:absolute;top:0;left:0;width:4px;height:100%}
+
+  /* lightbox */
+  .lb{position:fixed;inset:0;background:rgba(12,20,23,.94);z-index:50;
+    display:none;align-items:center;justify-content:center;padding:24px}
+  .lb.open{display:flex}
+  .lb img{max-width:100%;max-height:78vh;object-fit:contain;display:block}
+  .lb figure{margin:0;max-width:1200px;width:100%;text-align:center}
+  .lb figcaption{font-family:var(--mono);font-size:12px;color:#D8DED8;
+    padding-top:14px;line-height:1.7}
+  .lb figcaption b{display:block;font-family:var(--display);font-weight:600;
+    font-size:18px;color:#fff;letter-spacing:-.01em;margin-bottom:4px}
+  .lb button{position:absolute;background:none;border:1px solid rgba(255,255,255,.3);
+    color:#fff;width:44px;height:44px;border-radius:50%;cursor:pointer;
+    font-size:20px;line-height:1;display:grid;place-items:center}
+  .lb button:hover{background:rgba(255,255,255,.14)}
+  .lb .prev{left:16px;top:50%;transform:translateY(-50%)}
+  .lb .next{right:16px;top:50%;transform:translateY(-50%)}
+  .lb .close{right:16px;top:16px}
+  .lb .count{position:absolute;left:0;right:0;bottom:18px;text-align:center;
+    font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.6)}
+
+  #map{height:400px;border:1px solid var(--rule);background:var(--paper-2);filter:saturate(.72)}
   .leaflet-container{font-family:var(--mono);font-size:12px;background:var(--paper-2)}
 
-  /* ---------- filters + table ---------- */
   .filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
-  .filters button{
-    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
-    text-transform:uppercase;padding:8px 14px;cursor:pointer;
-    background:transparent;color:var(--ink-soft);
-    border:1px solid var(--rule);border-radius:99px;transition:.15s
-  }
+  .filters button{font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;padding:8px 14px;cursor:pointer;background:transparent;
+    color:var(--ink-soft);border:1px solid var(--rule);border-radius:99px;transition:.15s}
   .filters button:hover{border-color:var(--ink);color:var(--ink)}
-  .filters button[aria-pressed="true"]{
-    background:var(--ink);border-color:var(--ink);color:var(--paper)
-  }
+  .filters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
   .filters button:focus-visible{outline:2px solid var(--co);outline-offset:2px}
 
   table{width:100%;border-collapse:collapse}
   caption{text-align:left;font-family:var(--mono);font-size:11px;color:var(--ink-soft);padding-bottom:10px}
-  th{
-    font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.13em;
+  th{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.13em;
     text-transform:uppercase;color:var(--ink-soft);text-align:left;
-    padding:0 10px 10px 0;border-bottom:1px solid var(--ink)
-  }
+    padding:0 10px 10px 0;border-bottom:1px solid var(--ink)}
   td{padding:11px 10px 11px 0;border-bottom:1px solid var(--rule);vertical-align:baseline}
   .num{text-align:right;font-family:var(--mono);font-size:13.5px;font-variant-numeric:tabular-nums}
   th.num{text-align:right}
   .date{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap}
   .ride{font-size:16.5px}
+  .cam{font-family:var(--mono);font-size:11px;color:var(--ink-soft);
+    background:none;border:none;padding:0 0 0 8px;cursor:pointer}
+  .cam:hover{color:var(--co)}
   .where{font-size:13.5px;color:var(--ink-soft)}
-  .where::before{
-    content:"";display:inline-block;width:7px;height:7px;border-radius:50%;
-    margin-right:8px;vertical-align:middle;background:var(--dot)
-  }
+  .where::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;
+    margin-right:8px;vertical-align:middle;background:var(--dot)}
   tr.vt{--dot:var(--vt)} tr.ny{--dot:var(--ny)} tr.co{--dot:var(--co)}
-  tfoot td{
-    border-bottom:none;border-top:1.5px solid var(--ink);
-    font-family:var(--display);font-weight:600;padding-top:14px
-  }
+  tfoot td{border-bottom:none;border-top:1.5px solid var(--ink);
+    font-family:var(--display);font-weight:600;padding-top:14px}
   tfoot .num{font-family:var(--mono);font-weight:500;font-size:14px}
 
-  footer{
-    padding:64px 0 72px;margin-top:56px;border-top:1px solid var(--rule);
-    font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--ink-soft)
-  }
+  footer{padding:64px 0 72px;margin-top:56px;border-top:1px solid var(--rule);
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--ink-soft)}
 
   @media (max-width:760px){
     header{padding-top:36px}
@@ -159,6 +144,7 @@
     .hide-sm{display:none}
     .ridge-note{margin-left:0;flex-basis:100%}
     td{padding:9px 8px 9px 0}
+    .gal{grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:4px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -181,7 +167,7 @@
     <span><i class="sw" style="background:var(--vt)"></i>Vermont</span>
     <span><i class="sw" style="background:var(--ny)"></i>New York</span>
     <span><i class="sw" style="background:var(--co)"></i>Colorado</span>
-    <span class="ridge-note">Tap a peak for the ride</span>
+    <span class="ridge-note">Peaks with a dot have photos — tap to open</span>
   </div>
 
   <dl class="totals">
@@ -191,6 +177,11 @@
     <div><dt>Riding days</dt><dd>26 of 30</dd></div>
     <div><dt>Trailheads</dt><dd>11</dd></div>
   </dl>
+
+  <section>
+    <h2>The summer<span id="galCount"></span></h2>
+    <div class="gal" id="gal"></div>
+  </section>
 
   <section>
     <h2>Where the rides started</h2>
@@ -207,84 +198,87 @@
       <button data-f="mtb" aria-pressed="false">Mountain</button>
       <button data-f="gravel" aria-pressed="false">Gravel</button>
       <button data-f="road" aria-pressed="false">Road</button>
+      <button data-f="photos" aria-pressed="false">With photos</button>
     </div>
     <table>
       <caption id="cap"></caption>
-      <thead>
-        <tr>
-          <th>Date</th><th>Ride</th><th class="hide-sm">Start</th>
-          <th class="num">Miles</th><th class="num">Elev ft</th>
-        </tr>
-      </thead>
+      <thead><tr>
+        <th>Date</th><th>Ride</th><th class="hide-sm">Start</th>
+        <th class="num">Miles</th><th class="num">Elev ft</th>
+      </tr></thead>
       <tbody id="tbody"></tbody>
-      <tfoot>
-        <tr>
-          <td colspan="2" id="footLabel"></td>
-          <td class="hide-sm"></td>
-          <td class="num" id="footMi"></td>
-          <td class="num" id="footFt"></td>
-        </tr>
-      </tfoot>
+      <tfoot><tr>
+        <td colspan="2" id="footLabel"></td><td class="hide-sm"></td>
+        <td class="num" id="footMi"></td><td class="num" id="footFt"></td>
+      </tr></tfoot>
     </table>
   </section>
 
   <footer>
     Distances and elevation from Strava, converted to imperial. Start points decoded
-    from each activity’s GPS track.
+    from each activity’s GPS track. Photos stripped of embedded location data.
   </footer>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="prev" id="lbPrev" aria-label="Previous">&#8249;</button>
+  <button class="next" id="lbNext" aria-label="Next">&#8250;</button>
+  <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <div class="count" id="lbCount"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// date, name, start, state, sport, miles, feet
+/* iso, name, start, state, sport, miles, feet, [photo files] */
 const RIDES = [
-["Jul 19","Sweet 16!","N. East Burke, VT","vt","mtb",16.6,1571],
-["Jul 20","Oh Darling!","Darling Hill, VT","vt","mtb",14.2,1664],
-["Jul 20","Lulu’s!","Darling Hill, VT","vt","mtb",2.4,364],
-["Jul 21","Hello 🐻, we’re Good ‘n You?","East Burke, VT","vt","mtb",14.8,1231],
-["Jul 21","Two Burks and a Lulu","Darling Hill, VT","vt","mtb",6.4,573],
-["Jul 22","Where IS Davis?","East Burke, VT","vt","mtb",12.0,1017],
-["Jul 22","Emma’s Revenge!","Darling Hill, VT","vt","mtb",5.2,607],
-["Jul 23","This one’s for you Steve, Steve and Dave!","N. East Burke, VT","vt","mtb",20.7,2270],
-["Jul 23","🍕","East Burke, VT","vt","mtb",1.1,48],
-["Jul 23","Following the fun!","Darling Hill, VT","vt","mtb",2.6,208],
-["Jul 24","The sidewinder sleeps, sleeps, sleeps in a coil…","Darling Hill, VT","vt","mtb",15.4,1409],
-["Jul 24","Hermit Thrush on Bobolink!","Darling Hill, VT","vt","mtb",4.3,499],
-["Jul 26","Skan Loop","Skaneateles, NY","ny","road",41.7,2763],
-["Jul 27","Otisco Coon","Skaneateles, NY","ny","road",20.9,1473],
-["Jul 30","Perimeter – QOW – Eureka – Wildhack – Phat","Frisco Peninsula, CO","co","mtb",16.4,1059],
-["Jul 30","Perimeter","Frisco Peninsula, CO","co","mtb",6.4,296],
-["Jul 31","Wellington – X10U8 – Turks – Sallie Barber","French Gulch, CO","co","mtb",11.4,1323],
-["Aug 1","Peaks ➡️ Frisco, Frisco ➡️ Breck","Breckenridge, CO","co","mtb",22.8,1610],
-["Aug 1","Perimeter x2","Frisco Peninsula, CO","co","mtb",13.2,567],
-["Aug 2","Boreas","Breckenridge, CO","co","gravel",24.2,2156],
-["Aug 2","The weekend of Sos","Frisco Peninsula, CO","co","mtb",9.2,352],
-["Aug 3","CT!","Swan River / Tiger Rd, CO","co","mtb",17.0,2416],
-["Aug 3","Perimeter!","Frisco Peninsula, CO","co","mtb",6.4,296],
-["Aug 4","Swan River Rampage pre-ride","Upper Swan River, CO","co","mtb",8.8,856],
-["Aug 4","Vista Haus","Breckenridge, CO","co","gravel",9.6,1470],
-["Aug 5","Swan River Rampage pre-ride","Upper Swan River, CO","co","mtb",5.9,658],
-["Aug 5","Vista Haus (🫎 detour)","Breckenridge, CO","co","gravel",8.9,1449],
-["Aug 6","QOW – Wonderland – Eureka – Perimeter","Frisco Peninsula, CO","co","mtb",7.1,613],
-["Aug 6","Vista Haus","Breckenridge, CO","co","gravel",8.0,1467],
-["Aug 7","Pence – Toad – Peaks – Zendo – Game – Toad","Breckenridge, CO","co","mtb",8.9,1122],
-["Aug 7","Vista Haus","Breckenridge, CO","co","gravel",8.6,1466],
-["Aug 8","X10U8 – Turks – Sallie B – Bald Barber","Upper French Gulch, CO","co","mtb",12.3,1689],
-["Aug 8","Afternoon perimeter / Coors hour","Frisco Peninsula, CO","co","mtb",6.5,280],
-["Aug 9","Vista Haus","Breckenridge, CO","co","gravel",9.3,1443],
-["Aug 10","A Basin (race recon)","Arapahoe Basin, CO","co","mtb",9.7,1719],
-["Aug 10","Afternoon at the Peninsula","Frisco Peninsula, CO","co","mtb",6.5,278],
-["Aug 11","Peninsula","Frisco Peninsula, CO","co","mtb",11.1,1024],
-["Aug 11","Ten Mile Station","Breckenridge, CO","co","gravel",6.0,889],
-["Aug 13","QOW – Wonderland – Eureka – Buzz – Wildhack","Frisco Peninsula, CO","co","mtb",11.5,743],
-["Aug 13","Vista Haus","Breckenridge, CO","co","gravel",8.6,1463],
-["Aug 13","Afternoon Ride","Breckenridge, CO","co","road",3.7,338],
-["Aug 14","Pre-ride Summit Classic @ A Basin","Arapahoe Basin, CO","co","mtb",3.9,755],
-["Aug 14","Pence – Toad – Peaks – Zendo – Game – Toad","Breckenridge, CO","co","mtb",8.9,1143],
-["Aug 15","Vista Haus","Breckenridge, CO","co","gravel",8.6,1469],
-["Aug 16","CT – Red – Hay – Blair Witch","Swan River / Tiger Rd, CO","co","mtb",10.7,1472],
-["Aug 16","Afternoon Peninsula 🍻 🥨","Frisco Peninsula, CO","co","mtb",10.0,383],
-["Aug 17","Peaks ➡️ Frisco ➡️ Breck","Breckenridge, CO","co","mtb",23.5,1647]
+["2026-07-19","Sweet 16!","N. East Burke, VT","vt","mtb",16.6,1571,["2026-07-19-sweet-16-1.jpg", "2026-07-19-sweet-16-2.jpg"]],
+["2026-07-20","Oh Darling!","Darling Hill, VT","vt","mtb",14.2,1664,["2026-07-20-oh-darling-1.jpg", "2026-07-20-oh-darling-2.jpg", "2026-07-20-oh-darling-3.jpg"]],
+["2026-07-20","Lulu’s!","Darling Hill, VT","vt","mtb",2.4,364,["2026-07-20-lulus-1.jpg", "2026-07-20-lulus-2.jpg"]],
+["2026-07-21","Hello 🐻, we’re Good ‘n You?","East Burke, VT","vt","mtb",14.8,1231,["2026-07-21-hello-were-good-n-you-1.jpg", "2026-07-21-hello-were-good-n-you-2.jpg"]],
+["2026-07-21","Two Burks and a Lulu","Darling Hill, VT","vt","mtb",6.4,573,[]],
+["2026-07-22","Where IS Davis?","East Burke, VT","vt","mtb",12.0,1017,["2026-07-22-where-is-davis-1.jpg", "2026-07-22-where-is-davis-2.jpg", "2026-07-22-where-is-davis-3.jpg", "2026-07-22-where-is-davis-4.jpg", "2026-07-22-where-is-davis-5.jpg"]],
+["2026-07-22","Emma’s Revenge!","Darling Hill, VT","vt","mtb",5.2,607,["2026-07-22-emmas-revenge-1.jpg", "2026-07-22-emmas-revenge-2.jpg"]],
+["2026-07-23","This one’s for you Steve, Steve and Dave!","N. East Burke, VT","vt","mtb",20.7,2270,["2026-07-23-this-ones-for-you-steve-steve-and-dave-1.jpg", "2026-07-23-this-ones-for-you-steve-steve-and-dave-2.jpg", "2026-07-23-this-ones-for-you-steve-steve-and-dave-3.jpg", "2026-07-23-this-ones-for-you-steve-steve-and-dave-4.jpg"]],
+["2026-07-23","🍕","East Burke, VT","vt","mtb",1.1,48,[]],
+["2026-07-23","Following the fun!","Darling Hill, VT","vt","mtb",2.6,208,["2026-07-23-following-the-fun-1.jpg"]],
+["2026-07-24","The sidewinder sleeps, sleeps, sleeps in a coil…","Darling Hill, VT","vt","mtb",15.4,1409,["2026-07-24-the-sidewinder-sleeps-sleeps-sleeps-in-a-1.jpg", "2026-07-24-the-sidewinder-sleeps-sleeps-sleeps-in-a-2.jpg", "2026-07-24-the-sidewinder-sleeps-sleeps-sleeps-in-a-3.jpg", "2026-07-24-the-sidewinder-sleeps-sleeps-sleeps-in-a-4.jpg", "2026-07-24-the-sidewinder-sleeps-sleeps-sleeps-in-a-5.jpg"]],
+["2026-07-24","Hermit Thrush on Bobolink!","Darling Hill, VT","vt","mtb",4.3,499,["2026-07-24-hermit-thrush-on-bobolink-1.jpg", "2026-07-24-hermit-thrush-on-bobolink-2.jpg", "2026-07-24-hermit-thrush-on-bobolink-3.jpg"]],
+["2026-07-26","Skan Loop","Skaneateles, NY","ny","road",41.7,2763,["2026-07-26-skan-loop-1.jpg", "2026-07-26-skan-loop-2.jpg"]],
+["2026-07-27","Otisco Coon","Skaneateles, NY","ny","road",20.9,1473,[]],
+["2026-07-30","Perimeter - QOW - Eureka - Wildhack - Phat","Frisco Peninsula, CO","co","mtb",16.4,1059,["2026-07-30-perimeter-qow-eureka-wildhack-phat-1.jpg", "2026-07-30-perimeter-qow-eureka-wildhack-phat-2.jpg", "2026-07-30-perimeter-qow-eureka-wildhack-phat-3.jpg", "2026-07-30-perimeter-qow-eureka-wildhack-phat-4.jpg", "2026-07-30-perimeter-qow-eureka-wildhack-phat-5.jpg", "2026-07-30-perimeter-qow-eureka-wildhack-phat-6.jpg", "2026-07-30-perimeter-qow-eureka-wildhack-phat-7.jpg"]],
+["2026-07-30","Perimeter","Frisco Peninsula, CO","co","mtb",6.4,296,["2026-07-30-perimeter-1.jpg", "2026-07-30-perimeter-2.jpg", "2026-07-30-perimeter-3.jpg"]],
+["2026-07-31","Wellington - X10U8 - Turks - Sallie Barber - Barney","French Gulch, CO","co","mtb",11.4,1323,["2026-07-31-wellington-x10u8-turks-sallie-barber-bar-1.jpg", "2026-07-31-wellington-x10u8-turks-sallie-barber-bar-2.jpg", "2026-07-31-wellington-x10u8-turks-sallie-barber-bar-3.jpg", "2026-07-31-wellington-x10u8-turks-sallie-barber-bar-4.jpg"]],
+["2026-08-01","Peaks ➡️ Frisco, Frisco ➡️ Breck","Breckenridge, CO","co","mtb",22.8,1610,["2026-08-01-peaks-frisco-frisco-breck-1.jpg", "2026-08-01-peaks-frisco-frisco-breck-2.jpg"]],
+["2026-08-01","Perimeter x2","Frisco Peninsula, CO","co","mtb",13.2,567,["2026-08-01-perimeter-x2-1.jpg"]],
+["2026-08-02","Boreas","Breckenridge, CO","co","gravel",24.2,2156,["2026-08-02-boreas-1.jpg", "2026-08-02-boreas-2.jpg", "2026-08-02-boreas-3.jpg", "2026-08-02-boreas-4.jpg", "2026-08-02-boreas-5.jpg", "2026-08-02-boreas-6.jpg", "2026-08-02-boreas-7.jpg", "2026-08-02-boreas-8.jpg", "2026-08-02-boreas-9.jpg", "2026-08-02-boreas-10.jpg"]],
+["2026-08-02","The weekend of Sos","Frisco Peninsula, CO","co","mtb",9.2,352,["2026-08-02-the-weekend-of-sos-1.jpg", "2026-08-02-the-weekend-of-sos-2.jpg", "2026-08-02-the-weekend-of-sos-3.jpg"]],
+["2026-08-03","CT!","Swan River / Tiger Rd, CO","co","mtb",17.0,2416,["2026-08-03-ct-1.jpg", "2026-08-03-ct-2.jpg", "2026-08-03-ct-3.jpg", "2026-08-03-ct-4.jpg"]],
+["2026-08-03","Perimeter!","Frisco Peninsula, CO","co","mtb",6.4,296,["2026-08-03-perimeter-1.jpg"]],
+["2026-08-04","Swan River Rampage pre-ride","Upper Swan River, CO","co","mtb",8.8,856,["2026-08-04-swan-river-rampage-pre-ride-1.jpg", "2026-08-04-swan-river-rampage-pre-ride-2.jpg"]],
+["2026-08-04","Vista Haus","Breckenridge, CO","co","gravel",9.6,1470,["2026-08-04-vista-haus-1.jpg", "2026-08-04-vista-haus-2.jpg"]],
+["2026-08-05","Swan River Rampage pre-ride","Upper Swan River, CO","co","mtb",5.9,658,["2026-08-05-swan-river-rampage-pre-ride-1.jpg"]],
+["2026-08-05","Vista Haus (🫎 detour)","Breckenridge, CO","co","gravel",8.9,1449,["2026-08-05-vista-haus-detour-1.jpg", "2026-08-05-vista-haus-detour-2.jpg"]],
+["2026-08-06","QOW - Wonderland - Eureka - Perimeter","Frisco Peninsula, CO","co","mtb",7.1,613,["2026-08-06-qow-wonderland-eureka-perimeter-1.jpg", "2026-08-06-qow-wonderland-eureka-perimeter-2.jpg"]],
+["2026-08-06","Vista Haus","Breckenridge, CO","co","gravel",8.0,1467,["2026-08-06-vista-haus-1.jpg", "2026-08-06-vista-haus-2.jpg"]],
+["2026-08-07","Pence - Toad - Peaks - Zendo - Game - Toad","Breckenridge, CO","co","mtb",8.9,1122,["2026-08-07-pence-toad-peaks-zendo-game-toad-1.jpg"]],
+["2026-08-07","Vista Haus","Breckenridge, CO","co","gravel",8.6,1466,["2026-08-07-vista-haus-1.jpg"]],
+["2026-08-08","X10U8 - Turks - Sallie B - Bald Barber - Nightmare","Upper French Gulch, CO","co","mtb",12.3,1689,["2026-08-08-x10u8-turks-sallie-b-bald-barber-nightma-1.jpg", "2026-08-08-x10u8-turks-sallie-b-bald-barber-nightma-2.jpg", "2026-08-08-x10u8-turks-sallie-b-bald-barber-nightma-3.jpg", "2026-08-08-x10u8-turks-sallie-b-bald-barber-nightma-4.jpg", "2026-08-08-x10u8-turks-sallie-b-bald-barber-nightma-5.jpg"]],
+["2026-08-08","Afternoon perimeter/Coors hour","Frisco Peninsula, CO","co","mtb",6.5,280,["2026-08-08-afternoon-perimetercoors-hour-1.jpg"]],
+["2026-08-09","Vista Haus","Breckenridge, CO","co","gravel",9.3,1443,["2026-08-09-vista-haus-1.jpg", "2026-08-09-vista-haus-2.jpg", "2026-08-09-vista-haus-3.jpg", "2026-08-09-vista-haus-4.jpg"]],
+["2026-08-10","A Basin (race recon)","Arapahoe Basin, CO","co","mtb",9.7,1719,["2026-08-10-a-basin-race-recon-1.jpg"]],
+["2026-08-10","Afternoon at the Peninsula","Frisco Peninsula, CO","co","mtb",6.5,278,["2026-08-10-afternoon-at-the-peninsula-1.jpg", "2026-08-10-afternoon-at-the-peninsula-2.jpg"]],
+["2026-08-11","Peninsula","Frisco Peninsula, CO","co","mtb",11.1,1024,["2026-08-11-peninsula-1.jpg"]],
+["2026-08-11","Ten Mile Station","Breckenridge, CO","co","gravel",6.0,889,["2026-08-11-ten-mile-station-1.jpg"]],
+["2026-08-13","QOW - Wonderland - Eureka - Buzz - Wildhack - Perimeter","Frisco Peninsula, CO","co","mtb",11.5,743,[]],
+["2026-08-13","Vista Haus","Breckenridge, CO","co","gravel",8.6,1463,["2026-08-13-vista-haus-1.jpg"]],
+["2026-08-13","Afternoon Ride","Breckenridge, CO","co","road",3.7,338,[]],
+["2026-08-14","Pre-ride Summit Classic @ A Basin","Arapahoe Basin, CO","co","mtb",3.9,755,["2026-08-14-pre-ride-summit-classic-a-basin-1.jpg", "2026-08-14-pre-ride-summit-classic-a-basin-2.jpg"]],
+["2026-08-14","Pence - Toad - Peaks - Zendo - Game - Toad","Breckenridge, CO","co","mtb",8.9,1143,["2026-08-14-pence-toad-peaks-zendo-game-toad-1.jpg"]],
+["2026-08-15","Vista Haus","Breckenridge, CO","co","gravel",8.6,1469,["2026-08-15-vista-haus-1.jpg"]],
+["2026-08-16","CT - Red - Hay - Blair Witch","Swan River / Tiger Rd, CO","co","mtb",10.7,1472,["2026-08-16-ct-red-hay-blair-witch-1.jpg"]],
+["2026-08-16","Afternoon Peninsula 🍻 🥨","Frisco Peninsula, CO","co","mtb",10.0,383,["2026-08-16-afternoon-peninsula-1.jpg"]],
+["2026-08-17","Peaks ➡️ Frisco ➡️ Breck","Breckenridge, CO","co","mtb",23.5,1647,["2026-08-17-peaks-frisco-breck-1.jpg"]]
 ];
 
 const HEADS = [
@@ -301,80 +295,139 @@ const HEADS = [
 ["Arapahoe Basin, CO",39.6420,-105.8728,"co","Race recon and the Summit Classic pre-ride"]
 ];
 
-const COLOR = {vt:"#2F6D50",ny:"#7A3B5E",co:"#D64500"};
-const fmt = n => n.toLocaleString("en-US");
+const COLOR={vt:"#2F6D50",ny:"#7A3B5E",co:"#D64500"};
+const fmt=n=>n.toLocaleString("en-US");
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const pretty=iso=>{const[,m,d]=iso.split("-");return MON[+m-1]+" "+ +d;};
+
+/* flat photo list for the lightbox */
+const SHOTS=[];
+RIDES.forEach((r,ri)=>r[7].forEach(f=>SHOTS.push({file:f,ride:ri})));
+const firstShotOf=ri=>SHOTS.findIndex(s=>s.ride===ri);
+
+/* ---------- gallery ---------- */
+document.getElementById("galCount").textContent=
+  `${SHOTS.length} photos · ${RIDES.filter(r=>r[7].length).length} rides`;
+document.getElementById("gal").innerHTML=SHOTS.map((s,i)=>{
+  const r=RIDES[s.ride];
+  return `<figure tabindex="0" data-i="${i}">
+    <span class="flag" style="background:${COLOR[r[3]]}"></span>
+    <img loading="lazy" src="photos/${s.file}" alt="${r[1].replace(/"/g,"&quot;")}">
+    <figcaption>${pretty(r[0])} · ${r[1]}</figcaption>
+  </figure>`;
+}).join("");
+
+/* ---------- lightbox ---------- */
+const lb=document.getElementById("lb"), lbImg=document.getElementById("lbImg"),
+      lbCap=document.getElementById("lbCap"), lbCount=document.getElementById("lbCount");
+let idx=0;
+function paint(){
+  const s=SHOTS[idx], r=RIDES[s.ride];
+  lbImg.src="photos/"+s.file; lbImg.alt=r[1];
+  lbCap.innerHTML=`<b>${r[1]}</b>${pretty(r[0])} · ${r[2]} · ${r[5]} mi · ${fmt(r[6])} ft`;
+  lbCount.textContent=`${idx+1} / ${SHOTS.length}`;
+}
+function open(i){ idx=i; paint(); lb.classList.add("open"); document.body.style.overflow="hidden"; }
+function close(){ lb.classList.remove("open"); document.body.style.overflow=""; }
+const step=d=>{ idx=(idx+d+SHOTS.length)%SHOTS.length; paint(); };
+
+document.getElementById("gal").addEventListener("click",e=>{
+  const f=e.target.closest("figure"); if(f)open(+f.dataset.i);
+});
+document.getElementById("gal").addEventListener("keydown",e=>{
+  const f=e.target.closest("figure");
+  if(f&&(e.key==="Enter"||e.key===" ")){e.preventDefault();open(+f.dataset.i);}
+});
+document.getElementById("lbClose").onclick=close;
+document.getElementById("lbPrev").onclick=()=>step(-1);
+document.getElementById("lbNext").onclick=()=>step(1);
+lb.addEventListener("click",e=>{ if(e.target===lb)close(); });
+document.addEventListener("keydown",e=>{
+  if(!lb.classList.contains("open"))return;
+  if(e.key==="Escape")close();
+  if(e.key==="ArrowLeft")step(-1);
+  if(e.key==="ArrowRight")step(1);
+});
 
 /* ---------- ridgeline ---------- */
-(function ridge(){
+(function(){
   const svg=document.getElementById("ridge"), tip=document.getElementById("tip");
   const W=1000,H=230,BASE=200,TOP=24;
   const totalMi=RIDES.reduce((s,r)=>s+r[5],0);
   const maxFt=Math.max(...RIDES.map(r=>r[6]));
-  const scaleX=W/totalMi, scaleY=(BASE-TOP)/maxFt;
+  const sx=W/totalMi, sy=(BASE-TOP)/maxFt;
   const ns="http://www.w3.org/2000/svg";
   const el=(t,a)=>{const e=document.createElementNS(ns,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
 
-  // gridlines
   const g=el("g",{class:"grid"});
   [1000,2000].forEach(ft=>{
-    const y=BASE-ft*scaleY;
+    const y=BASE-ft*sy;
     g.appendChild(el("line",{x1:0,x2:W,y1:y,y2:y}));
     const t=el("text",{x:2,y:y-5});t.textContent=fmt(ft)+" ft";g.appendChild(t);
   });
   svg.appendChild(g);
 
-  // one filled path per state block, plus hover targets
-  let x=0, run=[], cur=RIDES[0][3], startX=0;
+  let x=0,run=[],cur=RIDES[0][3],startX=0;
   const flush=(pts,state,x0,x1)=>{
     const d=`M ${x0} ${BASE} `+pts.map(p=>`L ${p[0]} ${p[1]} L ${p[2]} ${BASE}`).join(" ")+` L ${x1} ${BASE} Z`;
     svg.appendChild(el("path",{d,fill:COLOR[state],"fill-opacity":.9}));
   };
+  const marks=[];
   RIDES.forEach((r,i)=>{
-    const w=r[5]*scaleX, peak=BASE-r[6]*scaleY;
+    const w=r[5]*sx, peak=BASE-r[6]*sy;
     if(r[3]!==cur){ flush(run,cur,startX,x); run=[]; cur=r[3]; startX=x; }
     run.push([x+w/2,peak,x+w]);
-    const hit=el("rect",{x,y:TOP-20,width:w,height:BASE-TOP+20,class:"hit",tabindex:0});
     const cx=x+w/2;
+    if(r[7].length)marks.push([cx,peak]);
+    const hit=el("rect",{x,y:TOP-20,width:w,height:BASE-TOP+20,class:"hit",tabindex:0});
     const show=()=>{
-      tip.innerHTML=`<b>${r[1]}</b>${r[0]} · ${r[2]}<br>${r[5]} mi · ${fmt(r[6])} ft`;
-      tip.style.left=(cx/W*100)+"%";
-      tip.style.top=(peak/H*100)+"%";
-      tip.style.opacity=1;
+      tip.innerHTML=`<b>${r[1]}</b>${pretty(r[0])} · ${r[2]}<br>${r[5]} mi · ${fmt(r[6])} ft`
+        +(r[7].length?`<br>${r[7].length} photo${r[7].length>1?"s":""}`:"");
+      tip.style.left=(cx/W*100)+"%"; tip.style.top=(peak/H*100)+"%"; tip.style.opacity=1;
     };
     const hide=()=>tip.style.opacity=0;
     hit.addEventListener("mouseenter",show); hit.addEventListener("focus",show);
     hit.addEventListener("mouseleave",hide); hit.addEventListener("blur",hide);
+    const go=()=>{ const s=firstShotOf(i); if(s>=0)open(s); };
+    hit.addEventListener("click",go);
+    hit.addEventListener("keydown",e=>{if(e.key==="Enter")go();});
     svg.appendChild(hit);
     x+=w;
   });
   flush(run,cur,startX,x);
   svg.appendChild(el("line",{x1:0,x2:W,y1:BASE,y2:BASE,class:"base"}));
-  // keep hover targets above the fills
+  marks.forEach(([cx,cy])=>svg.appendChild(el("circle",{cx,cy:cy-9,r:2.6,class:"pdot"})));
   svg.querySelectorAll(".hit").forEach(h=>svg.appendChild(h));
 })();
 
 /* ---------- table ---------- */
 const tbody=document.getElementById("tbody");
 function render(f){
-  const rows=RIDES.filter(r=>f==="all"||r[3]===f||r[4]===f);
-  tbody.innerHTML=rows.map(r=>`
-    <tr class="${r[3]}">
-      <td class="date">${r[0]}</td>
-      <td class="ride">${r[1]}</td>
+  const rows=RIDES.filter(r=>f==="all"||r[3]===f||r[4]===f||(f==="photos"&&r[7].length));
+  tbody.innerHTML=rows.map(r=>{
+    const i=RIDES.indexOf(r);
+    return `<tr class="${r[3]}">
+      <td class="date">${pretty(r[0])}</td>
+      <td class="ride">${r[1]}${r[7].length?`<button class="cam" data-r="${i}"
+        aria-label="View ${r[7].length} photos">◉ ${r[7].length}</button>`:""}</td>
       <td class="where hide-sm">${r[2]}</td>
       <td class="num">${r[5].toFixed(1)}</td>
       <td class="num">${fmt(r[6])}</td>
-    </tr>`).join("");
+    </tr>`;
+  }).join("");
   const mi=rows.reduce((s,r)=>s+r[5],0), ft=rows.reduce((s,r)=>s+r[6],0);
-  const days=new Set(rows.map(r=>r[0])).size;
-  document.getElementById("footLabel").textContent=`${rows.length} rides · ${days} days`;
+  document.getElementById("footLabel").textContent=
+    `${rows.length} rides · ${new Set(rows.map(r=>r[0])).size} days`;
   document.getElementById("footMi").textContent=mi.toFixed(1);
   document.getElementById("footFt").textContent=fmt(ft);
-  document.getElementById("cap").textContent=
-    `${Math.round(ft/mi)} ft of climbing per mile`;
+  document.getElementById("cap").textContent=`${Math.round(ft/mi)} ft of climbing per mile`;
 }
+tbody.addEventListener("click",e=>{
+  const b=e.target.closest(".cam"); if(!b)return;
+  const s=firstShotOf(+b.dataset.r); if(s>=0)open(s);
+});
 document.getElementById("filters").addEventListener("click",e=>{
-  const b=e.target.closest("button"); if(!b) return;
+  const b=e.target.closest("button"); if(!b)return;
   [...e.currentTarget.children].forEach(x=>x.setAttribute("aria-pressed",x===b));
   render(b.dataset.f);
 });
@@ -383,12 +436,11 @@ render("all");
 /* ---------- map ---------- */
 const map=L.map("map",{scrollWheelZoom:false});
 L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{
-  attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:17
-}).addTo(map);
+  attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:17}).addTo(map);
 const pts=HEADS.map(h=>{
-  L.circleMarker([h[1],h[2]],{
-    radius:8,color:"#17262B",weight:1.5,fillColor:COLOR[h[3]],fillOpacity:.95
-  }).addTo(map).bindPopup(`<strong>${h[0]}</strong><br>${h[4]}`);
+  L.circleMarker([h[1],h[2]],{radius:8,color:"#17262B",weight:1.5,
+    fillColor:COLOR[h[3]],fillOpacity:.95}).addTo(map)
+    .bindPopup(`<strong>${h[0]}</strong><br>${h[4]}`);
   return [h[1],h[2]];
 });
 map.fitBounds(pts,{padding:[40,40]});
